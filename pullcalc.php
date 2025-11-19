@@ -130,7 +130,15 @@ function calculate() {
     const adjusted = required / (1 - goal * d);
 
     document.getElementById("basePulls").innerText = Math.ceil(required);
-    document.getElementById("bufferPulls").innerText = Math.ceil(adjusted);
+    if (adjusted < required){
+    document.getElementById("bufferPulls").innerText = 0;
+    }
+    else{
+        if(adjusted > (priority+priorityFilled)){
+        document.getElementById("bufferPulls").innerText = priority+priorityFilled;
+        }
+        else{document.getElementById("bufferPulls").innerText = Math.ceil(adjusted);}
+    }
     document.getElementById("results").style.display = "block";
 }
 </script>

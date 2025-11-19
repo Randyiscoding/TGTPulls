@@ -1,7 +1,6 @@
 def pulls(priority, priority_filled,goal_percentage):
      import math
-     # Credit Google: calculate time to solve PCR
-     from datetime import datetime
+     from datetime import datetime # Credit Google: calculate time to solve PCR
      
      # Define the start and end times as strings
      start_time_str = "07:00:00" # time the store opens
@@ -27,12 +26,17 @@ def pulls(priority, priority_filled,goal_percentage):
      d = pcr/pull_rate
      results = (goal_percentage * (priority + priority_filled)) - priority_filled
      results_buffer = results/(1-goal_percentage*d)
-  # ToDo: add if statement for if buffer is less than required or more than total
-     return math.ceil(results), math.ceil(results_buffer)
+     if results_buffer < results:
+          return math.ceil(results), 0
+     elif results_buffer > priority_filled+priority_filled:
+          return math.ceil(results), priority+priority_filled
+     else:
+          return math.ceil(results), math.ceil(results_buffer)
 
-a = 149
-b = 217
-c =.71
+# Script Sandbox area (For testing and/or actual use)
+a = 50 # Priorities
+b = 50 # Priorities Filled Already
+c =.71 # The Goal you're Trying To reach
     
 x, y = pulls(a,b,c)
 print(x, y)
