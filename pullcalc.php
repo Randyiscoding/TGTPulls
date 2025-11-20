@@ -88,6 +88,7 @@
     <div id="results" class="result-box" style="display:none;">
         <p><b>Required Pulls:</b> <span id="basePulls"></span></p>
         <p><b>Adjusted for Guest Shopping:</b> <span id="bufferPulls"></span></p>
+        <p><b>Staffing Recommendation:</b> <span id="staffRec"></span></p>
     </div>
 </div>
 
@@ -102,9 +103,11 @@ function calculate() {
         return;
     }
 
-    const pullRate = 42.83333; // items Users are pulling per hour
+    const pullRate = 53.7887; // items Users are pulling per hour
+    // above is based on puling 28 items in 31Mins, 13secs, 56ms
     const storeOpen = "07:00:00"; //Assuming your store opens at 7pm Everyday
-
+    const storeClose = "22:00:00"; //Assuming your store closes at 10pm Everyday
+    // TODO: add safety windows so calculations are usable after store hours
     // Current time
     const now = new Date();
     const nowStr = now.toTimeString().split(" ")[0];
@@ -112,10 +115,14 @@ function calculate() {
     // Convert "HH:MM:SS" to Date objects for same day
     const today = new Date().toISOString().split("T")[0];
     const start = new Date(today + "T" + storeOpen);
+    const end = new Date(today + "T" + storeClose);
     const current = new Date(today + "T" + nowStr);
 
     let hours = (current - start) / (1000 * 60 * 60);
+    let close_hours = (end - current) / (1000 * 60 * 60);
     if (hours < 0.5) hours = 0.5; // prevent division explosion
+    if (close_hours > 0.5) close_hours = 0.5; // prevent division explosion Maybe??
+
 
     // PCR = priority creation rate
     const pcr = (priority + priorityFilled) / hours;
@@ -129,6 +136,10 @@ function calculate() {
     // adjusted requirement
     const adjusted = required / (1 - goal * d);
 
+    //Staffing Recommendation
+    const ptdpci = (priority + priorityFilled) + (pcr * close_hours)
+    const staffrec = (goalPercentage * ptdpci)/(pullRate * close_hours)
+
     document.getElementById("basePulls").innerText = Math.ceil(required);
     if (adjusted < required){
     document.getElementById("bufferPulls").innerText = 0;
@@ -139,6 +150,7 @@ function calculate() {
         }
         else{document.getElementById("bufferPulls").innerText = Math.ceil(adjusted);}
     }
+    document.getElementById("staffRec").innerText = "We Recommend "+Math.ceil(staffrec)+" TMs to pull based on a projected "+ptdpci+" over the next "+close_hours+" hour(s)";
     document.getElementById("results").style.display = "block";
 }
 </script>

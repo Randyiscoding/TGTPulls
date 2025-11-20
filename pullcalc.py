@@ -1,9 +1,22 @@
+def main():
+    # Main function to control program flow
+    # Script Sandbox area (For testing and/or actual use)
+    a = 285  # Priorities
+    b = 109  # Priorities Filled Already
+    c = .71  # The Goal you're Trying To reach
+
+    x, y, z = pulls(a, b, c)
+    print(x, y, z)
+
+
 def pulls(priority, priority_filled,goal_percentage):
      import math
      from datetime import datetime # Credit Google: calculate time to solve PCR
-     
+     #TODO add safety windows so calculations are usable after store hours
+
      # Define the start and end times as strings
-     start_time_str = "07:00:00" # time the store opens
+     start_time_str = "00:00:00" # time the store opens
+     close_time_str = "22:00:00" # time the store closes
      end = datetime.now()
      end_time_str = end.strftime("%H:%M:%S")
      
@@ -13,30 +26,36 @@ def pulls(priority, priority_filled,goal_percentage):
      # Convert the time strings to datetime objects
      start_time = datetime.strptime(start_time_str, FMT)
      end_time = datetime.strptime(end_time_str, FMT)
+     close_time = datetime.strptime(close_time_str, FMT)
      
      # Calculate the difference between the two times
      time_difference = end_time - start_time
+     close_time_difference = close_time - end_time
      
      # Get the total seconds from the timedelta object
      hours = (time_difference.total_seconds())/3600
+     close_hours = (close_time_difference.total_seconds())/3600
 
      # PCR = Priority Creation Rate: number of priorities/hr since store open
      pcr = (priority + priority_filled)/hours 
-     pull_rate = 42.8333 # Number of items the user can pull in 1 hour
+     pull_rate = 53.7887 # Number of items the user can pull in 1 hour
+     # above is based on puling 28 items in 31Mins, 13secs, 56ms
      d = pcr/pull_rate
      results = (goal_percentage * (priority + priority_filled)) - priority_filled
      results_buffer = results/(1-goal_percentage*d)
-     if results_buffer < results:
-          return math.ceil(results), 0
-     elif results_buffer > priority_filled+priority_filled:
-          return math.ceil(results), priority+priority_filled
-     else:
-          return math.ceil(results), math.ceil(results_buffer)
 
-# Script Sandbox area (For testing and/or actual use)
-a = 50 # Priorities
-b = 50 # Priorities Filled Already
-c =.71 # The Goal you're Trying To reach
-    
-x, y = pulls(a,b,c)
-print(x, y)
+     # Staffing Recomendation
+     ptdpci = (priority+priority_filled) + (pcr*close_hours) # calculates the Projected Total number of DPCI's to pull
+     staffrec = math.ceil((goal_percentage * ptdpci)/(pull_rate*close_hours)) #number of people reccomended to be pulling
+
+     # Results
+     if results_buffer < results:
+          return math.ceil(results), 0, staffrec
+     elif results_buffer > priority+priority_filled: #Fixed bad math here
+          return math.ceil(results), priority+priority_filled, staffrec
+     else:
+          return math.ceil(results), math.ceil(results_buffer), staffrec
+
+
+if __name__ == "__main__":
+    main()
