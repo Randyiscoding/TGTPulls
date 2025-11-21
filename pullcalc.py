@@ -1,21 +1,23 @@
+import math
+from datetime import datetime # Credit Google: calculate time to solve PCR
+
 def main():
     # Main function to control program flow
     # Script Sandbox area (For testing and/or actual use)
-    a = 285  # Priorities
-    b = 109  # Priorities Filled Already
+    a = 50  # Priorities
+    b = 50  # Priorities Filled Already
     c = .71  # The Goal you're Trying To reach
+
 
     x, y, z = pulls(a, b, c)
     print(x, y, z)
 
 
 def pulls(priority, priority_filled,goal_percentage):
-     import math
-     from datetime import datetime # Credit Google: calculate time to solve PCR
      #TODO add safety windows so calculations are usable after store hours
 
      # Define the start and end times as strings
-     start_time_str = "00:00:00" # time the store opens
+     start_time_str = "07:00:00" # time the store opens
      close_time_str = "22:00:00" # time the store closes
      end = datetime.now()
      end_time_str = end.strftime("%H:%M:%S")
@@ -31,13 +33,21 @@ def pulls(priority, priority_filled,goal_percentage):
      # Calculate the difference between the two times
      time_difference = end_time - start_time
      close_time_difference = close_time - end_time
+     hoo = close_time - start_time #HOO = hours of Operation, should be 16
      
      # Get the total seconds from the timedelta object
      hours = (time_difference.total_seconds())/3600
      close_hours = (close_time_difference.total_seconds())/3600
+     operation = (hoo.total_seconds())/3600
 
-     # PCR = Priority Creation Rate: number of priorities/hr since store open
-     pcr = (priority + priority_filled)/hours 
+
+     # OPCR = number of priorities/hr since store open
+     opcr = (priority + priority_filled)/hours
+     x = hours/operation
+     pull_strength = 1 # adjust bell curve
+
+     # Priority Creation Rate:
+     pcr = ((priority+priority_filled) + (opcr*close_hours)) - (priority_filled+priority) * (x * (1 - x)) * pull_strength
      pull_rate = 53.7887 # Number of items the user can pull in 1 hour
      # above is based on puling 28 items in 31Mins, 13secs, 56ms
      d = pcr/pull_rate

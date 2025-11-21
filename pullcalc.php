@@ -121,7 +121,7 @@ function calculate() {
     let hours = (current - start) / (1000 * 60 * 60);
     let close_hours = (end - current) / (1000 * 60 * 60);
     if (hours < 0.5) hours = 0.5; // prevent division explosion
-    if (close_hours > 0.5) close_hours = 0.5; // prevent division explosion Maybe??
+    if (close_hours <= 0.5) close_hours = 0.5; // prevent division explosion Maybe??
 
 
     // PCR = priority creation rate
@@ -136,9 +136,10 @@ function calculate() {
     // adjusted requirement
     const adjusted = required / (1 - goal * d);
 
-    //Staffing Recommendation
+    // Staffing Recommendation
+    // TODO: Update PCR to match py
     const ptdpci = (priority + priorityFilled) + (pcr * close_hours)
-    const staffrec = (goalPercentage * ptdpci)/(pullRate * close_hours)
+    const staffrec = (goal * ptdpci)/(pullRate * close_hours)
 
     document.getElementById("basePulls").innerText = Math.ceil(required);
     if (adjusted < required){
@@ -150,7 +151,7 @@ function calculate() {
         }
         else{document.getElementById("bufferPulls").innerText = Math.ceil(adjusted);}
     }
-    document.getElementById("staffRec").innerText = "We Recommend "+Math.ceil(staffrec)+" TMs to pull based on a projected "+ptdpci+" over the next "+close_hours+" hour(s)";
+    document.getElementById("staffRec").innerText = "We Recommend "+Math.ceil(staffrec)+" TMs to pull based on a projected "+Math.ceil(ptdpci)+" over the next "+close_hours.toFixed(2)+" hour(s)";
     document.getElementById("results").style.display = "block";
 }
 </script>
