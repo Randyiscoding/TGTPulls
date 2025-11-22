@@ -96,13 +96,19 @@
 function calculate() {
     const priority = parseFloat(document.getElementById("priority").value);
     const priorityFilled = parseFloat(document.getElementById("priorityFilled").value);
-    let goal = parseFloat(document.getElementById("goalPercentage").value);
-
+    const goal = parseFloat(document.getElementById("goalPercentage").value);
+    let goalp = 0;
+    // TODO: Add alert for outside of store hours
     if (isNaN(priority) || isNaN(priorityFilled) || isNaN(goal)) {
         alert("Please enter all values.");
         return;
     }
-    if (goal > 1){goal = goal/100;} // Allows user to  enter whole number or Decimal numbers
+    if (goal > 1){
+        goalp = goal/100;
+        } // Allows user to  enter whole number or Decimal numbers
+    else{
+    goalp = goal;
+    }
 
     const pullRate = 53.7887; // items Users are pulling per hour
     // above is based on puling 28 items in 31Mins, 13secs, 56ms
@@ -132,20 +138,20 @@ function calculate() {
     let pull_strength = 1; // adjust bell curve
 
     // PCR on a curve
-    const pcr = ((priority+priority_filled) + (opcr*close_hours)) - (priority_filled+priority) * (x * (1 - x)) * pull_strength
+    const pcr = ((priority+priorityFilled) + (opcr*close_hours)) - (priorityFilled+priority) * (x * (1 - x)) * pull_strength;
 
     // d = flow modifier
     const d = pcr / pullRate;
 
     // base requirement
-    const required = (goal * (priority + priorityFilled)) - priorityFilled;
+    const required = (goalp * (priority + priorityFilled)) - priorityFilled;
 
     // adjusted requirement
     const adjusted = required / (1 - goal * d);
 
     // Staffing Recommendation
-    const ptdpci = priority + (pcr * close_hours)
-    const staffrec = (goal * ptdpci)/(pullRate * close_hours)
+    const ptdpci = priority + (pcr * close_hours);
+    const staffrec = (goalp * ptdpci)/(pullRate * close_hours);
 
     document.getElementById("basePulls").innerText = Math.ceil(required);
     if (adjusted < required){
