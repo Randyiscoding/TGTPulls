@@ -14,6 +14,8 @@ def main():
 
 
 def pulls(priority, priority_filled,goal_percentage):
+     if goal_percentage > 1:
+         goal_percentage = goal_percentage / 100
      #TODO add safety windows so calculations are usable after store hours
 
      # Define the start and end times as strings
@@ -55,7 +57,7 @@ def pulls(priority, priority_filled,goal_percentage):
      results_buffer = results/(1-goal_percentage*d)
 
      # Staffing Recomendation
-     ptdpci = (priority+priority_filled) + (pcr*close_hours) # calculates the Projected Total number of DPCI's to pull
+     ptdpci = priority + (pcr*close_hours) # calculates the Projected Total number of DPCI's to pull
      staffrec = math.ceil((goal_percentage * ptdpci)/(pull_rate*close_hours)) #number of people reccomended to be pulling
 
      # Results
