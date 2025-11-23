@@ -16,7 +16,8 @@ def main():
 def pulls(priority, priority_filled,goal_percentage):
      if goal_percentage > 1:
          goal_percentage = goal_percentage / 100
-     #TODO add safety windows so calculations are usable after store hours
+     # TODO: add safety windows so calculations are usable after store hours
+     # TODO: Revert PCR/Variables to match html file
 
      # Define the start and end times as strings
      start_time_str = "07:00:00" # time the store opens

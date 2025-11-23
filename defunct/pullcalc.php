@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Priority Pull Calculator</title>
+<title>Priority Pull Calculator #Defunct Version !DoNotUse!</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -71,7 +71,7 @@
 </head>
 <body>
 
-<h1>Priority Pull Calculator</h1>
+<h1>Priority Pull Calculator #Defunct Version !DoNotUse!</h1>
 
 <div class="container">
     <label>Current Priority Count</label>
