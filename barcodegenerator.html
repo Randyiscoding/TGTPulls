@@ -1,10 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Barcode Generator</title>
+<meta charset="UTF-8">
+<title>Barcode Generator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Required for BarcodeFont to work -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Barcode+128&display=swap" rel="stylesheet">
+    <!-- End Requirement -->
+    <link rel="stylesheet" href="default.css">
+
 </head>
 <body>
+
+<h1>Barcode Generator</h1>
+
+<div class="container">
+
+    <label>Choose Category</label>
+
+    <div class="radio-block">
+        <input type="radio" name="category" id="backroom" value="backroom">
+        <label for="backroom">Backroom</label>
+    </div>
+
+    <div class="radio-block">
+        <input type="radio" name="category" id="OPU" value="OPU">
+        <label for="OPU">OPU / Drive-Up Cart</label>
+    </div>
+
+    <label for="locator">Location or Cart Name</label>
+    <input type="text" id="locator" oninput="updateBarcode()">
+
+    <div id="results" class="result-box">
+        <p><b>Barcode:</b> <span id="boom" class="libre-barcode-128-regular"></span></p>
+        <!-- <p><b>Adjusted for Guest Shopping:</b> <span id="bufferPulls"></span></p>
+        <p><b>Staffing Recommendation:</b> <span id="staffRec"></span></p> -->
+    </div>
+</div>
+
+<script>
+function updateBarcode() {
+    const location = document.getElementById("locator").value.trim();
+    const selected = document.querySelector('input[name="category"]:checked');
+
+    // Only show results if there's a selection + location text
+    if (!selected || location === "") {
+        document.getElementById("results").style.display = "none";
+        return;
+    }
+
+    let prefix = "";
+
+    if (selected.value === "backroom") prefix = "L01A";
+    if (selected.value === "OPU") prefix = "SHP";
+
+    const barcode = prefix + location;
+
+    document.getElementById("boom").innerText = `*${barcode}*`;
+    document.getElementById("results").style.display = "block";
+
+    // Fill in stub values for other fields (can update later)
+    //document.getElementById("bufferPulls").innerText = "Coming Soon";
+    //document.getElementById("staffRec").innerText = "Coming Soon";
+}
+
+// Update real-time when radio buttons are clicked
+document.querySelectorAll('input[name="category"]').forEach(item => {
+    item.addEventListener('change', updateBarcode);
+});
+</script>
 
 </body>
 </html>
