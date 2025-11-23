@@ -84,7 +84,6 @@ function calculate() {
 
     let k = (current - start) / (1000 * 60 * 60);
     let y = (end - current) / (1000 * 60 * 60);
-    console.log(k, y)
     if (k < 0.5) k = 0.5; // prevent division explosion
     if (y >= 15) y = 15; // prevent division explosion Maybe??
 
@@ -108,12 +107,12 @@ function calculate() {
     document.getElementById("bufferPulls").innerText = 0;
     }
     else{
-        if(b > (pf+p)){
-        document.getElementById("bufferPulls").innerText = p+pf;
+        if(b > p){
+        document.getElementById("bufferPulls").innerText = p;
         }
         else{document.getElementById("bufferPulls").innerText = Math.ceil(b);}
     }
-    document.getElementById("staffRec").innerText = "We Recommend "+Math.round(z)+" TMs to pull based on a projected "+Math.ceil(a)+" over the next "+y.toFixed(2)+" hour(s)";
+    document.getElementById("staffRec").innerText = "We Recommend "+Math.round(z)+" TM(s) to pull based on a projected "+Math.ceil(a)+" over the next "+y.toFixed(2)+" hour(s)";
     document.getElementById("results").style.display = "block";
 }
 </script>
