@@ -16,7 +16,8 @@ body {
         font-family: "Libre Barcode 128", system-ui;
         font-weight: 400;
         font-style: normal;
-        font-size: 7em;
+        font-size: 7vw;
+        white-space: nowrap;
     }
 
 
